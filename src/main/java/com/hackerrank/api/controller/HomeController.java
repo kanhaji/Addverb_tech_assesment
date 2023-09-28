@@ -23,7 +23,7 @@ public class HomeController {
   //1. POST
   @RequestMapping(value = "/home", method = RequestMethod.POST)
   public ResponseEntity<Home> addRecord(@RequestBody Home newRecord) {
-    if (newRecord.getId().toString() != null) {
+    if (newRecord.getId() != null) {
       return new ResponseEntity(newRecord, HttpStatus.BAD_REQUEST);
     }
     Home createRecord = homeRepository.save(newRecord);
@@ -34,14 +34,19 @@ public class HomeController {
   //2. GET by Id
   @RequestMapping(value = "/home/{id}", method = RequestMethod.GET)
   public ResponseEntity<Home> getRecordsById(@PathVariable Integer id) {
-    Optional<Home> data = homeRepository.findById(id);
+  try {
+	  Optional<Home> data = homeRepository.findById(id);
     if (data.isPresent()) {
       return new ResponseEntity(data, HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
-
+  catch(Exception e)
+  {
+	  return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+  }
+  }
   //3. GET
   @RequestMapping(value = "/home", method = RequestMethod.GET)
   public ResponseEntity<List<Home>> getRecords() {

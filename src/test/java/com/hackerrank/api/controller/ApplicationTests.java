@@ -1,8 +1,19 @@
 package com.hackerrank.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hackerrank.api.model.Home;
-import org.junit.jupiter.api.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Base64;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,12 +22,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Base64;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hackerrank.api.model.Home;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -38,11 +45,7 @@ class ApplicationTests {
   @Order(1)
   @DisplayName("status200WhenValidRequest")
   public void status200WhenValidRequest() throws Exception {
-    Home expectedRecord = Home.builder()
-            .area(13.2f)
-            .price(23.0f)
-            .city("Delhi")
-            .build();
+	  Home expectedRecord = new Home(13.2f,23.0f,"Delhi");
     Home actualHome = om.readValue(mockMvc.perform(post("/api/home")
                     .contentType("application/json")
                     .headers(authHeaders)
